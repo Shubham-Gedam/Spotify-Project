@@ -1,0 +1,17 @@
+# .gitignore
+# Ignore node modules
+node_modules/
+.env
+.DS_Store
+dist/
+build/
+coverage/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vscode/
+.idea/
+package-lock.json
+packages.json
