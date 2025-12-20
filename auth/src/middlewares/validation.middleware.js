@@ -20,3 +20,8 @@ export const registrationValidationRules = [
 
 ]
 
+export const loginValidationRules = [
+    body('email').isEmail().withMessage('Invalid email address'),
+    body('password').notEmpty().withMessage('Password is required'),
+    validate
+]

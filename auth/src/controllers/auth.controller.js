@@ -40,14 +40,7 @@ export async function register(req, res) {
 
    res.cookie("token", token )
 
-   res.status(201).json({
-        message: "User registered successfully",
-        user: {
-            id: user._id,
-            email: user.email,
-            fullname: user.fullname
-        }
-    });
+   return res.redirect('http://localhost:5173/')
 }
 
 
@@ -106,14 +99,27 @@ export async function googleAuthCallback (req,res) {
 
     res.cookie("token", token);
 
-    res.status(201).json({
-        message: "User registered successfully",
-        user: {
-            id: newUser._id,
-            email: newUser.email,
-            fullname: newUser.fullname,
-            role: newUser.role
-        }
-    });
+    return res.redirect('http://localhost:5173/')
 
+}
+
+export async function login(req, res) {
+
+    const { email, password } = req.body;
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+        return res.status(400).json({ message: "Invalid email or password" });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        return res.status(400).json({ message: "Invalid email or password" });
+    }
+    const token = jwt.sign({
+        id: user._id,
+        role: user.role,
+    }, config.JWT_SECRET, { expiresIn: '2d' });
+    res.cookie("token", token );
+
+     return res.redirect('http://localhost:5173/')
 }
