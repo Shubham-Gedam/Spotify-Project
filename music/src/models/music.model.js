@@ -10,15 +10,15 @@ const musicSchema = new mongoose.Schema({
         required: true 
     },
     artistId: { 
-        type: mongoose.Schema.Types.ObjectId, ref: 'Artist', 
+        type: mongoose.Schema.Types.ObjectId, 
         required: true 
     },
 
-    musicUrl: { 
+    musicKey: { 
         type: String, 
         required: true 
     },
-    coverImageUrl: { 
+    coverImageKey: { 
         type: String, 
         required: true
     }

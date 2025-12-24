@@ -5,6 +5,6 @@ import connectDB from './src/db/db.js';
 connectDB();
 
 
-app.listen(3000, () => {
-  console.log('Music app is running on http://localhost:3000');
+app.listen(3002, () => {
+  console.log('Music app is running on http://localhost:3002');
 });
