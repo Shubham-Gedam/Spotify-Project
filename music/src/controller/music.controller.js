@@ -175,3 +175,13 @@ export async function getPlaylistById(req,res) {
         
     }
 }
+
+export async function getArtistPlaylists(req, res) {
+    try {
+        const playlists = await playlistModel.find({ artistId: req.user.id })
+        return res.status(200).json({ playlists });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}

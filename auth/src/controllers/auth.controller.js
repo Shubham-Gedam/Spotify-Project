@@ -79,6 +79,7 @@ export async function googleAuthCallback (req,res) {
 
          res.cookie("token", token );
 
+
         //  return res.status(200).json({
         //     message: "User logged in successfully",
         //     user:{
@@ -88,6 +89,11 @@ export async function googleAuthCallback (req,res) {
         //         role: isUserAleadyExist.role,
         //     }
         //  })
+        if(isUserAleadyExist.role === 'artist' ){
+            return res.redirect('http://localhost:5173/artist/dashboard')
+        }
+
+        return res.redirect('http://localhost:5173/')
     }
 
     const newUser = new userModel({
@@ -142,15 +148,16 @@ export async function login(req, res) {
     
     res.cookie("token", token );
 
-    // res.status(200).json({
-    //     message: "User logged in successfully",
-    //     user:{
-    //         id: user._id,
-    //         email: user.email,
-    //         fullname: user.fullname,
-    //         role: user.role,
-    //     }
-    // })
+    res.status(200).json({
+        message: "User logged in successfully",
+        user:{
+            id: user._id,
+            email: user.email,
+            fullname: user.fullname,
+            role: user.role,
+        }
+    })
+    
 
-     return res.redirect('http://localhost:5173/')
+    //  return res.redirect('http://localhost:5173/')
 }
