@@ -1,8 +1,8 @@
 
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Register from './Register';
-import Login from './Login';
+import Register from './pages/register';
+import Login from './pages/login';
 
 
 const App = () => {

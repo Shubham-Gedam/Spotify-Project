@@ -43,17 +43,17 @@ export async function register(req, res) {
 
    res.cookie("token", token )
 
-   res.status(201).json({
-    message: "User registered successfully",
-    user:{
-        id: user._id,
-        email: user.email,
-        fullname: user.fullname,
-        role: user.role,
-    }
-   })
+//    res.status(201).json({
+//     message: "User registered successfully",
+//     user:{
+//         id: user._id,
+//         email: user.email,
+//         fullname: user.fullname,
+//         role: user.role,
+//     }
+//    })
 
-//    return res.redirect('http://localhost:5173/')
+   return res.redirect('http://localhost:5173/')
 }
 
 
@@ -79,15 +79,15 @@ export async function googleAuthCallback (req,res) {
 
          res.cookie("token", token );
 
-         return res.status(200).json({
-            message: "User logged in successfully",
-            user:{
-                id: isUserAleadyExist._id,
-                email: isUserAleadyExist.email,
-                fullname: isUserAleadyExist.fullname,
-                role: isUserAleadyExist.role,
-            }
-         })
+        //  return res.status(200).json({
+        //     message: "User logged in successfully",
+        //     user:{
+        //         id: isUserAleadyExist._id,
+        //         email: isUserAleadyExist.email,
+        //         fullname: isUserAleadyExist.fullname,
+        //         role: isUserAleadyExist.role,
+        //     }
+        //  })
     }
 
     const newUser = new userModel({
@@ -142,15 +142,15 @@ export async function login(req, res) {
     
     res.cookie("token", token );
 
-    res.status(200).json({
-        message: "User logged in successfully",
-        user:{
-            id: user._id,
-            email: user.email,
-            fullname: user.fullname,
-            role: user.role,
-        }
-    })
+    // res.status(200).json({
+    //     message: "User logged in successfully",
+    //     user:{
+    //         id: user._id,
+    //         email: user.email,
+    //         fullname: user.fullname,
+    //         role: user.role,
+    //     }
+    // })
 
-    //  return res.redirect('http://localhost:5173/')
+     return res.redirect('http://localhost:5173/')
 }
