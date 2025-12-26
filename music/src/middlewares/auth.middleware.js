@@ -12,7 +12,7 @@ export async function authArtistMiddleware(req, res, next) {
 
     try {
 
-        const decoded = jwt.verify(token, config.jwtSecret);
+        const decoded = jwt.verify(token, config.JWT_SECRET);
         if (decoded.role !== 'artist') {
             return res.status(403).json({ error: 'Forbidden' });
         }
@@ -33,7 +33,7 @@ export async function authUserMiddleware(req,res,next) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
     try {
-          const decoded = jwt.verify(token, config.jwtSecret)
+          const decoded = jwt.verify(token, config.JWT_SECRET)
           req.user = decoded
           next();
         
