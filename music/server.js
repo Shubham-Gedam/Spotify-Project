@@ -1,10 +1,15 @@
 import app from './src/app.js';
 import connectDB from './src/db/db.js';
+import initSocketServer from './src/sockets/socket.server.js'
+import http from 'http'
+
+const httpServer = http.createServer(app);
 
 // Connect to the database
 connectDB();
+initSocketServer(httpServer);
 
 
-app.listen(3002, () => {
+httpServer.listen(3002, () => {
   console.log('Music app is running on http://localhost:3002');
 });

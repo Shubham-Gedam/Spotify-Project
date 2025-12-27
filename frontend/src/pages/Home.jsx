@@ -3,7 +3,7 @@ import './Home.css'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-export default function Home() {
+export default function Home({socket}) {
   const navigate = useNavigate();
 
   // Sample data; later can be replaced by API calls
@@ -83,7 +83,8 @@ export default function Home() {
           {musics.map(m => (
             <div
               onClick={() => {
-                navigate(`/music/${m.id}`)
+                socket?.emit("play",{musicId: m.id})
+                {navigate(`/music/${m.id}`)}
               }}
               key={m.id} className="music-card surface" tabIndex={0}>
               <div className="music-cover-wrap">
