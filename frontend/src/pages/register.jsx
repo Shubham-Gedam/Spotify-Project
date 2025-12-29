@@ -23,10 +23,12 @@ export default function Register() {
     }
 
     async function handleSubmit(e) {
-        e.preventDefault()
-        try {
+    e.preventDefault();
 
-            await axios.post("http://localhost:3000/api/auth/register", {
+    try {
+        const res = await axios.post(
+            "http://localhost:3000/api/auth/register",
+            {
                 email: form.email,
                 fullname: {
                     firstname: form.firstName,
@@ -34,16 +36,22 @@ export default function Register() {
                 },
                 password: form.password,
                 role: form.userType
-            }, {
+            },
+            {
                 withCredentials: true
-            })
+            }
+        );
 
-            navigate('/');
-
-        } catch (err) {
-            console.error("Error during registration:", err);
+        if (res.data.user.role === "artist") {
+            navigate("/artist/dashboard");
+        } else {
+            navigate("/login"); 
         }
+
+    } catch (err) {
+        console.error("Error during registration:", err);
     }
+}
 
     return (
         <div className="register-wrapper">

@@ -41,19 +41,20 @@ export async function register(req, res) {
         role: user.role
     });
 
-   res.cookie("token", token )
+   res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax"
+    });
 
-//    res.status(201).json({
-//     message: "User registered successfully",
-//     user:{
-//         id: user._id,
-//         email: user.email,
-//         fullname: user.fullname,
-//         role: user.role,
-//     }
-//    })
-
-   return res.redirect('http://localhost:5173/')
+    return res.status(201).json({
+        message: "User registered successfully",
+        user: {
+            id: user._id,
+            email: user.email,
+            fullname: user.fullname,
+            role: user.role
+        }
+    });   
 }
 
 
