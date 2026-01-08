@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, data } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import Register from './pages/register';
 import Login from './pages/login';
 import ArtistDashboard from './pages/artist/ArtistDashboard';
@@ -8,6 +8,8 @@ import UploadMusic from './pages/artist/UploadMusic'
 import Home from './pages/Home';
 import MusicPlayer from './pages/music/MusicPlayer';
 import {io} from 'socket.io-client'
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 const App = () => {
 
@@ -17,7 +19,9 @@ const App = () => {
     const newSocket = io("http://localhost:3002",{
       withCredentials:true
     })
+    setTimeout(() => {
     setSocket(newSocket)
+  }, 0)
 
     newSocket.on("play",(data)=>{
       const musicId = data.musicId
@@ -40,6 +44,7 @@ const App = () => {
 
   return (
     <Router>
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Home socket={socket} />} />
         <Route path="/register" element={<Register />} />
@@ -48,6 +53,7 @@ const App = () => {
         <Route path="/artist/dashboard/upload-music" element={<UploadMusic />} />
         <Route path="/music/:id" element={<MusicPlayer />} />
       </Routes>
+      <Footer/>
     </Router>
   );
 }
