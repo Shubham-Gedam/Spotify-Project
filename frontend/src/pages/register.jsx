@@ -165,6 +165,18 @@ export default function Register() {
                     <button type="submit" className="btn btn-primary" aria-label="Create account">
                         Create account
                     </button>
+                    <div className="login-redirect">
+    <p className="text-muted">
+        Already have an account?
+        <button
+            type="button"
+            className="link-btn"
+            onClick={() => navigate("/login")}
+        >
+            Login
+        </button>
+    </p>
+</div>
                 </form>
             </div>
         </div>

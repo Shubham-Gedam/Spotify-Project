@@ -4,6 +4,23 @@
   width: 100%;
 }
 
+.login-redirect {
+    margin-top: 14px;
+    text-align: center;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #f5f5f8;
+    margin-left: 6px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.link-btn:hover {
+    text-decoration: underline;
+}
 .register-card {
   display: flex;
   flex-direction: column;

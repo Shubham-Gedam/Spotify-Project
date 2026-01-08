@@ -16,24 +16,33 @@ export default function Login() {
         setForm(f => ({ ...f, [ name ]: value }))
     }
 
-    function handleSubmit(e) {
-        e.preventDefault()
+    async function handleSubmit(e) {
+    e.preventDefault();
 
-        try {
-            axios.post("http://localhost:3000/api/auth/login", {
+    try {
+        const res = await axios.post(
+            "http://localhost:3000/api/auth/login",
+            {
                 email: form.email,
                 password: form.password
-            }, {
+            },
+            {
                 withCredentials: true
-            }).then(() => {
-                navigate('/');
-            })
+            }
+        );
 
-        } catch (err) {
-            console.error("Error during login:", err);
+        // 🔹 ROLE BASED REDIRECT
+        if (res.data.user.role === "artist") {
+            navigate("/artist/dashboard");
+        } else {
+            navigate("/");
         }
 
+    } catch (err) {
+        console.error("Error during login:", err);
     }
+}
+
 
     return (
         <div className="login-wrapper">
