@@ -29,4 +29,11 @@ router.get('/playlist', authMiddleware.authUserMiddleware, musicController.getPl
 
 router.get('/playlist/:id', authMiddleware.authUserMiddleware , musicController.getPlaylistById )
 
+router.delete(
+    '/:id',
+    authMiddleware.authArtistMiddleware,
+    musicController.deleteMusic
+);
+
+
 export default router

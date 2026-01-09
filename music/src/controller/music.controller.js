@@ -185,3 +185,43 @@ export async function getArtistPlaylists(req, res) {
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
+export async function deleteMusic(req, res) {
+    const { id } = req.params;
+
+    try {
+        // 1️⃣ Music find karo
+        const music = await musicModel.findById(id);
+
+        if (!music) {
+            return res.status(404).json({
+                message: "Music not found"
+            });
+        }
+
+        // 2️⃣ Ownership check (artist-only delete)
+        if (music.artistId.toString() !== req.user.id.toString()) {
+            return res.status(403).json({
+                message: "You are not allowed to delete this music"
+            });
+        }
+
+        // 3️⃣ Playlist se music remove karo
+        await playlistModel.updateMany(
+            { music: id },
+            { $pull: { music: id } }
+        );
+
+        // 4️⃣ Music delete
+        await musicModel.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            message: "Music deleted successfully"
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}

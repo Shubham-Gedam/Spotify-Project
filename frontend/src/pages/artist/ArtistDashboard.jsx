@@ -9,34 +9,58 @@ export default function ArtistDashboard() {
     const [musics, setMusics] = useState([]);
     const [playlists, setPlaylists] = useState([]);
 
+    const handleDeleteMusic = async (musicId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this song?");
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(
+                `http://localhost:3002/api/music/${musicId}`,
+                { withCredentials: true }
+            );
+
+            // UI se song remove
+            setMusics(prev => prev.filter(m => m.id !== musicId));
+        } catch (error) {
+            console.error(error);
+            alert("Failed to delete music");
+        }
+    };
+
     useEffect(() => {
         // Fetch artist musics
         axios.get("http://localhost:3002/api/music/artist-musics", { withCredentials: true })
             .then(res => {
-                setMusics(res.data.musicsDocs.map(m => ({
-                    id: m._id,
-                    title: m.title,
-                    artist: m.artist,
-                    coverImageUrl: m.coverImageUrl,
-                    musicUrl: m.musicUrl,
-                    plays: m.plays || 0,
-                    duration: m.duration || '3:00',
-                    released: m.createdAt ? new Date(m.createdAt).toISOString().split('T')[0] : '2024-01-01'
-                })));
+                setMusics(
+                    res.data.musicsDocs.map(m => ({
+                        id: m._id,
+                        title: m.title,
+                        artist: m.artist,
+                        coverImageUrl: m.coverImageUrl,
+                        musicUrl: m.musicUrl,
+                        plays: m.plays || 0,
+                        duration: m.duration || '3:00',
+                        released: m.createdAt
+                            ? new Date(m.createdAt).toISOString().split('T')[0]
+                            : '2024-01-01'
+                    }))
+                );
             })
             .catch(err => console.error(err));
 
         // Fetch artist playlists
         axios.get("http://localhost:3002/api/music/playlist", { withCredentials: true })
             .then(res => {
-                setPlaylists(res.data.playlist.map(p => ({
-                    id: p._id,
-                    title: p.title,
-                    artist: p.artist,
-                    followers: p.followers || 0,
-                    musics: p.music || [],
-                    updated: 'N/A' // Agar backend updated date nahi de raha
-                })));
+                setPlaylists(
+                    res.data.playlist.map(p => ({
+                        id: p._id,
+                        title: p.title,
+                        artist: p.artist,
+                        followers: p.followers || 0,
+                        musics: p.music || [],
+                        updated: 'N/A'
+                    }))
+                );
             })
             .catch(err => console.error(err));
     }, []);
@@ -52,15 +76,30 @@ export default function ArtistDashboard() {
                     <p className="text-muted dash-sub">Overview of your content performance</p>
                 </div>
                 <div className="dashboard-actions inline">
-                    <button className="btn btn-primary" onClick={() => navigate('/artist/dashboard/upload-music')}>+ New Track</button>
-                    <button className="btn" style={{ background: 'var(--color-surface-alt)', border: '1px solid var(--color-border)' }}>+ New Playlist</button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => navigate('/artist/dashboard/upload-music')}
+                    >
+                        + New Track
+                    </button>
+                    <button
+                        className="btn"
+                        style={{
+                            background: 'var(--color-surface-alt)',
+                            border: '1px solid var(--color-border)'
+                        }}
+                    >
+                        + New Playlist
+                    </button>
                 </div>
             </header>
 
             <section className="data-panels">
                 <div className="panel surface">
                     <h3 className="panel-title">Total Plays</h3>
-                    <p className="metric">{musics.reduce((a, t) => a + (t.plays || 0), 0).toLocaleString()}</p>
+                    <p className="metric">
+                        {musics.reduce((a, t) => a + (t.plays || 0), 0).toLocaleString()}
+                    </p>
                 </div>
                 <div className="panel surface">
                     <h3 className="panel-title">Musics</h3>
@@ -72,25 +111,30 @@ export default function ArtistDashboard() {
                 </div>
                 <div className="panel surface">
                     <h3 className="panel-title">Followers</h3>
-                    <p className="metric">{playlists.reduce((a, p) => a + (p.followers || 0), 0).toLocaleString()}</p>
+                    <p className="metric">
+                        {playlists.reduce((a, p) => a + (p.followers || 0), 0).toLocaleString()}
+                    </p>
                 </div>
             </section>
 
             <div className="grid-sections">
+                {/* 🎵 MUSICS */}
                 <section className="tracks-section surface">
                     <div className="section-head">
                         <h2 className="section-title">Musics</h2>
                         <button className="btn btn-small">Manage</button>
                     </div>
+
                     <div className="table-wrapper">
                         <table className="data-table">
                             <thead>
                                 <tr>
-                                    <th style={{ width: '40%' }}>Title</th>
+                                    <th style={{ width: '35%' }}>Title</th>
                                     <th>Artist</th>
                                     <th>Plays</th>
                                     <th>Duration</th>
                                     <th>Released</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,6 +153,14 @@ export default function ArtistDashboard() {
                                         <td>{m.plays.toLocaleString()}</td>
                                         <td>{m.duration}</td>
                                         <td>{m.released}</td>
+                                        <td>
+                                            <button
+                                                className="btn btn-small btn-danger"
+                                                onClick={() => handleDeleteMusic(m.id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -116,36 +168,38 @@ export default function ArtistDashboard() {
                     </div>
                 </section>
 
+                {/* 📀 PLAYLISTS */}
                 <section className="playlists-section surface">
                     <div className="section-head">
                         <h2 className="section-title">Playlists</h2>
                         <button className="btn btn-small">View All</button>
                     </div>
+
                     <ul className="playlist-list">
                         {playlists.map(p => {
-                            const resolvedMusics = p.musics.map(id => musicMap[id]).filter(Boolean);
+                            const resolvedMusics = p.musics
+                                .map(id => musicMap[id])
+                                .filter(Boolean);
+
                             return (
                                 <li key={p.id} className="playlist-item">
                                     <div className="playlist-top">
-                                        <div className="playlist-cover-collage" aria-hidden>
-                                            {resolvedMusics.slice(0, 4).map(m => <img key={m.id} src={m.coverImageUrl} alt="" />)}
+                                        <div className="playlist-cover-collage">
+                                            {resolvedMusics.slice(0, 4).map(m => (
+                                                <img key={m.id} src={m.coverImageUrl} alt="" />
+                                            ))}
                                         </div>
                                         <div className="playlist-meta">
                                             <span className="playlist-name">{p.title}</span>
-                                            <span className="playlist-updated text-muted">Updated {p.updated}</span>
+                                            <span className="playlist-updated text-muted">
+                                                Updated {p.updated}
+                                            </span>
                                         </div>
                                     </div>
+
                                     <div className="playlist-stats">
                                         <span>{resolvedMusics.length} musics</span>
                                         <span>{p.followers.toLocaleString()} followers</span>
-                                    </div>
-                                    <div className="playlist-music-thumbs">
-                                        {resolvedMusics.slice(0, 6).map(m => (
-                                            <div key={m.id} className="music-thumb" title={m.title}>
-                                                <img src={m.coverImageUrl} alt="" />
-                                                <span className="music-thumb-title">{m.title}</span>
-                                            </div>
-                                        ))}
                                     </div>
                                 </li>
                             );
